@@ -49,11 +49,12 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      *
      * @param  int  $from
      * @param  int  $to
+     * @param  int  $step
      * @return static<int, int>
      */
-    public static function range($from, $to)
+    public static function range($from, $to, $step = 1)
     {
-        return new static(range($from, $to));
+        return new static(range($from, $to, $step));
     }
 
     /**
@@ -284,7 +285,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Get the items in the collection whose keys are not present in the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, mixed>|iterable<TKey, mixed>  $items
      * @return static
      */
     public function diffKeys($items)
@@ -295,7 +296,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Get the items in the collection whose keys are not present in the given items, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, mixed>|iterable<TKey, mixed>  $items
      * @param  callable(TKey, TKey): int  $callback
      * @return static
      */
@@ -307,7 +308,9 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Retrieve duplicate items from the collection.
      *
-     * @param  (callable(TValue): bool)|string|null  $callback
+     * @template TMapValue
+     *
+     * @param  (callable(TValue): TMapValue)|string|null  $callback
      * @param  bool  $strict
      * @return static
      */
@@ -335,7 +338,9 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Retrieve duplicate items from the collection using strict comparison.
      *
-     * @param  (callable(TValue): bool)|string|null  $callback
+     * @template TMapValue
+     *
+     * @param  (callable(TValue): TMapValue)|string|null  $callback
      * @return static
      */
     public function duplicatesStrict($callback = null)
@@ -490,7 +495,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      *
      * @param  (callable(TValue, TKey): TGroupKey)|array|string  $groupBy
      * @param  bool  $preserveKeys
-     * @return static<($groupBy is string ? array-key : ($groupBy is array ? array-key : TGroupKey)), static<($preserveKeys is true ? TKey : int), TValue>>
+     * @return static<($groupBy is string ? array-key : ($groupBy is array ? array-key : TGroupKey)), static<($preserveKeys is true ? TKey : int), ($groupBy is array ? mixed : TValue)>>
      */
     public function groupBy($groupBy, $preserveKeys = false)
     {
@@ -676,7 +681,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Intersect the collection with the given items by key.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, mixed>|iterable<TKey, mixed>  $items
      * @return static
      */
     public function intersectByKeys($items)
